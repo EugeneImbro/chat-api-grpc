@@ -1,0 +1,29 @@
+syntax = "proto3";
+package chat_backend;
+
+option go_package = "/github.com/EugeneImbro/chat-backend/internal/server";
+
+message User {
+  int32 id = 1;
+  string nickName = 2;
+}
+
+message GetUserByIdRequest{
+  int32 id = 1;
+}
+
+message GetUserByNickNameRequest{
+  string nickName = 1;
+}
+
+message GetUsersRequest{}
+
+message GetUsersResponse{
+  repeated User users = 1;
+}
+
+service UserService{
+  rpc getUserById(GetUserByIdRequest) returns (User);
+  rpc getUserByNickName(GetUserByNickNameRequest) returns (User);
+  rpc getUsers(GetUsersRequest) returns (GetUsersResponse);
+}

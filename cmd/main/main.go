@@ -2,11 +2,13 @@ package main
 
 import (
 	"github.com/EugeneImbro/chat-backend/internal/repository"
+	"github.com/EugeneImbro/chat-backend/internal/server"
 	"github.com/EugeneImbro/chat-backend/internal/service"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc"
 	"log"
-	"net/http"
+	"net"
 )
 
 func main() {
@@ -16,11 +18,11 @@ func main() {
 
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
-		Port:      viper.GetString("db.port"),
-		DBName:    viper.GetString("db.name"),
-		Username:  viper.GetString("db.username"),
-		Password:  viper.GetString("db.password"),
-		SSLMode:   viper.GetString("db.sslmode"),
+		Port:     viper.GetString("db.port"),
+		DBName:   viper.GetString("db.name"),
+		Username: viper.GetString("db.username"),
+		Password: viper.GetString("db.password"),
+		SSLMode:  viper.GetString("db.sslmode"),
 	})
 
 	if err != nil {
@@ -28,12 +30,15 @@ func main() {
 	}
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
-	//todo grpc
-	_ = services
 
-	server := &http.Server{Addr: ":" + viper.GetString("port")}
-	if err := server.ListenAndServe(); err != nil {
-		log.Fatalf("Start server error: %s", err.Error())
+	listener, err := net.Listen("tcp", ":"+viper.GetString("port"))
+	if err != nil {
+		log.Fatalf("Listener initialization error: %s", err.Error())
+	}
+	s := grpc.NewServer()
+	server.RegisterUserServiceServer(s, server.NewServer(services))
+	if err := s.Serve(listener); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
