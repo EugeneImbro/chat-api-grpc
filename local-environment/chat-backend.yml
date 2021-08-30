@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  chat-backend:
+    image: chat-backend:latest
+    container_name: chat-backend
+    ports:
+      - "8080:8080"
+
+networks:
+  default:
+    name: chat-backend-network
