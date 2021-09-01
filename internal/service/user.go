@@ -17,7 +17,7 @@ func (u *UserService) GetByNickName(nickName string) (*model.User, error) {
 	return u.repo.GetByNickName(nickName)
 }
 
-func (u *UserService) GetAll() (*[]model.User, error) {
+func (u *UserService) GetAll() ([]*model.User, error) {
 	return u.repo.GetAll()
 }
 

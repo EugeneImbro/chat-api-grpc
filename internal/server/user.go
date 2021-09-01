@@ -25,8 +25,8 @@ func (s *Server) GetUsers(ctx context.Context, request *GetUsersRequest) (*GetUs
 	if err != nil {
 		return nil, err
 	}
-	users := make([]*User, len(*models))
-	for i, u := range *models {
+	users := make([]*User, len(models))
+	for i, u := range models {
 		users[i] = &User{Id: u.Id, NickName: u.NickName}
 	}
 	return &GetUsersResponse{Users: users}, nil

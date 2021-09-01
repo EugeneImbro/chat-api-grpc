@@ -32,11 +32,11 @@ func (r *UserPostgres) GetByNickName(nickName string) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *UserPostgres) GetAll() (*[]model.User, error) {
-	var users []model.User
+func (r *UserPostgres) GetAll() ([]*model.User, error) {
+	var users []*model.User
 	query := fmt.Sprintf("SELECT * FROM %s", usersTable)
-	if err := r.db.Select(&users, query); err != nil {
+	if err := r.db.Select(users, query); err != nil {
 		return nil, err
 	}
-	return &users, nil
+	return users, nil
 }
