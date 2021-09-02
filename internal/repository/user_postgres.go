@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"fmt"
-	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/EugeneImbro/chat-backend/internal/model"
 )
 
 type UserPostgres struct {
@@ -16,7 +16,7 @@ func NewUserPostgres(db *sqlx.DB) *UserPostgres {
 
 func (r *UserPostgres) GetById(id int32) (*model.User, error) {
 	var user model.User
-	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", usersTable)
+	query := "SELECT * FROM users WHERE id=$1"
 	if err := r.db.Get(&user, query, id); err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (r *UserPostgres) GetById(id int32) (*model.User, error) {
 
 func (r *UserPostgres) GetByNickName(nickName string) (*model.User, error) {
 	var user model.User
-	query := fmt.Sprintf("SELECT * FROM %s WHERE nickname=$1", usersTable)
+	query := "SELECT * FROM users WHERE nickname=$1"
 	if err := r.db.Get(&user, query, nickName); err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (r *UserPostgres) GetByNickName(nickName string) (*model.User, error) {
 
 func (r *UserPostgres) GetAll() ([]*model.User, error) {
 	var users []*model.User
-	query := fmt.Sprintf("SELECT * FROM %s", usersTable)
+	query := "SELECT * FROM users"
 	if err := r.db.Select(users, query); err != nil {
 		return nil, err
 	}

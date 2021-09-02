@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/EugeneImbro/chat-backend/internal/model"
 )
 
 //go:generate mockgen -destination=mock/repository.go -source=repository.go  -package=repo_mock

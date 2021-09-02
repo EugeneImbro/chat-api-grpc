@@ -1,7 +1,8 @@
-package repository
+package postgres
 
 import (
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
 )
 

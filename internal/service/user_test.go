@@ -1,11 +1,13 @@
 package service
 
 import (
-	"github.com/EugeneImbro/chat-backend/internal/model"
-	"github.com/EugeneImbro/chat-backend/internal/repository/mock"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"testing"
+
+	"github.com/EugeneImbro/chat-backend/internal/model"
+	"github.com/EugeneImbro/chat-backend/internal/repository/mock"
 )
 
 func TestUserService_GetById(t *testing.T) {
