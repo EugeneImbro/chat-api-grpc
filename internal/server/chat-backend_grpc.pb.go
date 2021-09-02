@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	GetUserById(ctx context.Context, in *GetUserByIdRequest, opts ...grpc.CallOption) (*User, error)
 	GetUserByNickName(ctx context.Context, in *GetUserByNickNameRequest, opts ...grpc.CallOption) (*User, error)
-	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
+	GetUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUsersResponse, error)
 }
 
 type userServiceClient struct {
@@ -49,7 +50,7 @@ func (c *userServiceClient) GetUserByNickName(ctx context.Context, in *GetUserBy
 	return out, nil
 }
 
-func (c *userServiceClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error) {
+func (c *userServiceClient) GetUsers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUsersResponse, error) {
 	out := new(GetUsersResponse)
 	err := c.cc.Invoke(ctx, "/chat_backend.UserService/getUsers", in, out, opts...)
 	if err != nil {
@@ -59,16 +60,15 @@ func (c *userServiceClient) GetUsers(ctx context.Context, in *GetUsersRequest, o
 }
 
 // UserServiceServer is the server API for UserService service.
-// All implementations must embed UnimplementedUserServiceServer
+// All implementations should embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
 	GetUserById(context.Context, *GetUserByIdRequest) (*User, error)
 	GetUserByNickName(context.Context, *GetUserByNickNameRequest) (*User, error)
-	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
-	mustEmbedUnimplementedUserServiceServer()
+	GetUsers(context.Context, *emptypb.Empty) (*GetUsersResponse, error)
 }
 
-// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedUserServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedUserServiceServer struct {
 }
 
@@ -78,10 +78,9 @@ func (UnimplementedUserServiceServer) GetUserById(context.Context, *GetUserByIdR
 func (UnimplementedUserServiceServer) GetUserByNickName(context.Context, *GetUserByNickNameRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserByNickName not implemented")
 }
-func (UnimplementedUserServiceServer) GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error) {
+func (UnimplementedUserServiceServer) GetUsers(context.Context, *emptypb.Empty) (*GetUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
-func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
 // UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to UserServiceServer will
@@ -131,7 +130,7 @@ func _UserService_GetUserByNickName_Handler(srv interface{}, ctx context.Context
 }
 
 func _UserService_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUsersRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -143,7 +142,7 @@ func _UserService_GetUsers_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/chat_backend.UserService/getUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUsers(ctx, req.(*GetUsersRequest))
+		return srv.(UserServiceServer).GetUsers(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

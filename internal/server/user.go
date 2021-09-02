@@ -2,6 +2,8 @@ package server
 
 import (
 	"context"
+
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func (s *Server) GetUserById(ctx context.Context, request *GetUserByIdRequest) (*User, error) {
@@ -20,7 +22,7 @@ func (s *Server) GetUserByNickName(ctx context.Context, request *GetUserByNickNa
 	return &User{Id: model.Id, NickName: model.NickName}, nil
 }
 
-func (s *Server) GetUsers(ctx context.Context, request *GetUsersRequest) (*GetUsersResponse, error) {
+func (s *Server) GetUsers(ctx context.Context, empty *emptypb.Empty) (*GetUsersResponse, error) {
 	models, err := s.services.User.GetAll()
 	if err != nil {
 		return nil, err

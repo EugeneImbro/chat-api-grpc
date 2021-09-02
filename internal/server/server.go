@@ -5,7 +5,6 @@ import (
 )
 
 type Server struct {
-	UnimplementedUserServiceServer
 	services *service.Service
 }
 

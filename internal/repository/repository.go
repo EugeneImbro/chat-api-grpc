@@ -4,6 +4,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/EugeneImbro/chat-backend/internal/model"
+	"github.com/EugeneImbro/chat-backend/internal/repository/postgres"
 )
 
 //go:generate mockgen -destination=mock/repository.go -source=repository.go  -package=repo_mock
@@ -20,6 +21,6 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		User: NewUserPostgres(db),
+		User: postgres.NewUserPostgres(db),
 	}
 }
