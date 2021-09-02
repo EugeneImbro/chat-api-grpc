@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"os"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -15,33 +16,12 @@ import (
 	"github.com/EugeneImbro/chat-backend/internal/service"
 )
 
-//todo remove
-type Config struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
-	DBName   string
-	SSLMode  string
-}
-
 func main() {
 	if err := initConfig(); err != nil {
 		logrus.WithError(err).Fatal("config initialization error")
 	}
 
-	cfg := Config{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		DBName:   viper.GetString("db.name"),
-		Username: viper.GetString("db.username"),
-		Password: viper.GetString("db.password"),
-		SSLMode:  viper.GetString("db.sslmode"),
-	}
-
-	//todo use connection-string
-	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s",
-		cfg.Host, cfg.Port, cfg.DBName, cfg.Username, cfg.Password, cfg.SSLMode))
+	db, err := sqlx.Open("postgres", os.Getenv("DB_DSN"))
 	if err != nil {
 		logrus.WithError(err).Fatal("database initialization error")
 	}
@@ -53,7 +33,7 @@ func main() {
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%s"+viper.GetString("port")))
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", viper.GetString("port")))
 	if err != nil {
 		logrus.WithError(err).Fatal("listener initialization error")
 	}
