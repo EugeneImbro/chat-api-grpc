@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
@@ -8,9 +10,9 @@ import (
 ////go:generate mockgen -destination=mocks/service.go -source=service.go -package=mock
 
 type User interface {
-	GetById(id int32) (*model.User, error)
-	GetByNickName(nickName string) (*model.User, error)
-	GetAll() ([]*model.User, error)
+	GetById(ctx context.Context, id int32) (*model.User, error)
+	GetByNickName(ctx context.Context, nickName string) (*model.User, error)
+	List(ctx context.Context) ([]*model.User, error)
 }
 
 type Service struct {

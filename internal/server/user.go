@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Server) GetUserById(ctx context.Context, request *GetUserByIdRequest) (*User, error) {
-	model, err := s.services.User.GetById(request.GetId())
+	model, err := s.services.User.GetById(ctx, request.GetId())
 	if err != nil {
 		return nil, err
 	}
@@ -15,7 +15,7 @@ func (s *Server) GetUserById(ctx context.Context, request *GetUserByIdRequest) (
 }
 
 func (s *Server) GetUserByNickName(ctx context.Context, request *GetUserByNickNameRequest) (*User, error) {
-	model, err := s.services.User.GetByNickName(request.GetNickName())
+	model, err := s.services.User.GetByNickName(ctx, request.GetNickName())
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +23,7 @@ func (s *Server) GetUserByNickName(ctx context.Context, request *GetUserByNickNa
 }
 
 func (s *Server) GetUsers(ctx context.Context, empty *emptypb.Empty) (*GetUsersResponse, error) {
-	models, err := s.services.User.GetAll()
+	models, err := s.services.User.List(ctx)
 	if err != nil {
 		return nil, err
 	}

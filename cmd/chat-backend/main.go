@@ -39,6 +39,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	server.RegisterUserServiceServer(s, server.NewServer(services))
+	logrus.Infoln("server initialized")
 	if err := s.Serve(listener); err != nil {
 		logrus.WithError(err).Fatal("failed to serve")
 	}

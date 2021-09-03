@@ -37,7 +37,7 @@ func (m *MockUser) EXPECT() *MockUserMockRecorder {
 // GetAll mocks base method.
 func (m *MockUser) GetAll() ([]*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAll")
+	ret := m.ctrl.Call(m, "List")
 	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -46,7 +46,7 @@ func (m *MockUser) GetAll() ([]*model.User, error) {
 // GetAll indicates an expected call of GetAll.
 func (mr *MockUserMockRecorder) GetAll() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockUser)(nil).GetAll))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockUser)(nil).GetAll))
 }
 
 // GetById mocks base method.
