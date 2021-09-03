@@ -3,10 +3,10 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 
 	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/EugeneImbro/chat-backend/internal/repository"
@@ -26,8 +26,9 @@ func (r *UserPostgres) GetById(ctx context.Context, id int32) (*model.User, erro
 	if err := r.db.GetContext(ctx, &user,
 		"SELECT * FROM users WHERE id=$1",
 		id); err != nil {
-
-		//if not found
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, repository.ErrNotFound
+		}
 		return nil, fmt.Errorf("failed to get user by id: %w", err)
 	}
 	return &user, nil
@@ -39,11 +40,6 @@ func (r *UserPostgres) GetByNickName(ctx context.Context, nickName string) (*mod
 		&user,
 		"SELECT * FROM users WHERE nickname=$1",
 		nickName); err != nil {
-
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, repository.ErrNotFound
-		}
-
 		return nil, fmt.Errorf("failed to get user by nickname: %w", err)
 	}
 	return &user, nil
