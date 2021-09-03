@@ -2,14 +2,23 @@ package server
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
 func (s *Server) GetUserById(ctx context.Context, request *GetUserByIdRequest) (*User, error) {
 	model, err := s.services.User.GetById(ctx, request.GetId())
 	if err != nil {
-		return nil, err
+		if errors.Is(err, repository.ErrNotFound) {
+			return nil, status.Errorf(codes.NotFound, fmt.Sprintf("user with id %d not found", request.GetId()))
+		}
+		return nil, status.Errorf(codes.Internal, fmt.Sprintf("cannot get user: %s", err.Error()))
 	}
 	return &User{Id: model.Id, NickName: model.NickName}, nil
 }

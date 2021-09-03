@@ -3,11 +3,15 @@ package service
 import (
 	"context"
 
+	"github.com/pkg/errors"
+
 	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
 ////go:generate mockgen -destination=mocks/service.go -source=service.go -package=mock
+
+var ErrNotFound = errors.New("not found")
 
 type User interface {
 	GetById(ctx context.Context, id int32) (*model.User, error)

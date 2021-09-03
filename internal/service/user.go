@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/EugeneImbro/chat-backend/internal/repository"
@@ -12,7 +14,14 @@ type UserService struct {
 }
 
 func (u *UserService) GetById(ctx context.Context, id int32) (*model.User, error) {
-	return u.repo.GetById(ctx, id)
+	usr, err := u.repo.GetById(ctx, id)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			return nil, ErrNotFound
+		}
+		return nil, fmt.Errorf("cannot get user from repository: %w", err)
+	}
+	return usr, err
 }
 
 func (u *UserService) GetByNickName(ctx context.Context, nickName string) (*model.User, error) {
