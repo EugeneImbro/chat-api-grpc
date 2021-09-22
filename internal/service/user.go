@@ -33,7 +33,7 @@ func (u *UserService) GetById(ctx context.Context, id int32) (*model.User, error
 		if errors.Is(err, repository.ErrNotFound) {
 			return nil, ErrNotFound
 		}
-		return nil, fmt.Errorf("cannot get user from repository: %w", err)
+		return nil, fmt.Errorf("failed to GetByID: %w", err)
 	}
 	return usr, err
 }
@@ -44,11 +44,15 @@ func (u *UserService) GetByNickName(ctx context.Context, nickName string) (*mode
 		if errors.Is(err, repository.ErrNotFound) {
 			return nil, ErrNotFound
 		}
-		return nil, fmt.Errorf("cannot get user from repository: %w", err)
+		return nil, fmt.Errorf("failed to GetByID: %w", err)
 	}
 	return usr, err
 }
 
 func (u *UserService) List(ctx context.Context) ([]*model.User, error) {
-	return u.repo.UserList(ctx)
+	list, err := u.repo.UserList(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to List: %w", err)
+	}
+	return list, nil
 }
