@@ -20,7 +20,7 @@ func New(db *sqlx.DB) repository.Repository {
 	return &pg{db: db}
 }
 
-func (r *pg) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
+func (r pg) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
 	var user model.User
 	if err := r.db.GetContext(ctx, &user,
 		"SELECT id, nickname FROM users WHERE id=$1",
@@ -33,7 +33,7 @@ func (r *pg) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *pg) GetUserByNickName(ctx context.Context, nickName string) (*model.User, error) {
+func (r pg) GetUserByNickName(ctx context.Context, nickName string) (*model.User, error) {
 	var user model.User
 		if err := r.db.GetContext(ctx,
 		&user,
@@ -44,7 +44,7 @@ func (r *pg) GetUserByNickName(ctx context.Context, nickName string) (*model.Use
 	return &user, nil
 }
 
-func (r *pg) UserList(ctx context.Context) ([]*model.User, error) {
+func (r pg) UserList(ctx context.Context) ([]*model.User, error) {
 	var users []*model.User
 	if err := r.db.SelectContext(ctx, users,
 		"SELECT id, nickname FROM users",

@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -14,46 +15,31 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 
 	"github.com/EugeneImbro/chat-backend/internal/model"
+	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
-func TestUserRepository_GetById(t *testing.T) {
-	ctx := context.Background()
-	c, db, _ := createPreparedDBContainer()
-	defer c.Terminate(ctx)
+var (
+	db  *sqlx.DB
+	ctx = context.Background()
+	r   repository.Repository
+)
 
-	r := New(db)
+func TestMain(m *testing.M) {
+	shutdown := setup()
 
-	t.Run("OK", func(t *testing.T) {
-		rollback := "DELETE FROM users WHERE id=1"
-		defer func() {
-			if _, err := db.Exec(rollback); err != nil {
-				logrus.WithError(err).Fatal("cannot execute rollback query")
-			}
-		}()
+	r = New(db)
 
-		query := "INSERT INTO users (id, nickname) VALUES (1, 'Richard Cheese')"
-
-		if _, err := db.Exec(query); err != nil {
-			logrus.WithError(err).Fatal("cannot execute query")
-		}
-
-		expected := &model.User{Id: 1, NickName: "Richard Cheese"}
-
-		user, err := r.GetUserByID(context.Background(), 1)
-		if err != nil {
-			logrus.WithError(err).Fatal("cannot get user from repository")
-		}
-
-		assert.Equal(t, user, expected)
-	})
-
+	code := m.Run()
+	shutdown()
+	os.Exit(code)
 }
 
-func createPreparedDBContainer() (testcontainers.Container, *sqlx.DB, error) {
+func setup() func() {
 	user := "postgres"
 	password := "password"
 	dbName := "postgres"
@@ -69,8 +55,6 @@ func createPreparedDBContainer() (testcontainers.Container, *sqlx.DB, error) {
 			user, password, port.Port(), dbName)
 	}
 
-	ctx := context.Background()
-
 	req := testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
 			Image:        "postgres:latest",
@@ -81,18 +65,18 @@ func createPreparedDBContainer() (testcontainers.Container, *sqlx.DB, error) {
 		},
 		Started: true,
 	}
-	container, err := testcontainers.GenericContainer(ctx, req)
+	c, err := testcontainers.GenericContainer(ctx, req)
 	if err != nil {
 		logrus.WithError(err).Fatal("cannot initialize db container")
 	}
-	mappedPort, err := container.MappedPort(ctx, nat.Port(port))
+	mappedPort, err := c.MappedPort(ctx, nat.Port(port))
 	if err != nil {
 		logrus.WithError(err).Fatal("cannot get mapped port")
 	}
 
 	logrus.Println("postgres container ready and running at port: ", mappedPort)
 
-	db, err := sqlx.Open("postgres", dbURL(mappedPort))
+	db, err = sqlx.Open("postgres", dbURL(mappedPort))
 
 	migrator, err := migrate.New(
 		fmt.Sprintf("file://%s", "../../../migrations"),
@@ -107,5 +91,50 @@ func createPreparedDBContainer() (testcontainers.Container, *sqlx.DB, error) {
 		logrus.WithError(err).Fatal("failed to migrate")
 	}
 
-	return container, db, nil
+	shutdownFn := func() {
+		if c != nil {
+			c.Terminate(ctx)
+		}
+	}
+
+	return shutdownFn
+}
+
+func TestUserRepository_GetById(t *testing.T) {
+	query := "INSERT INTO users (id, nickname) VALUES (1, 'Richard Cheese')"
+	_, err := db.Exec(query)
+	require.NoError(t, err)
+
+	t.Cleanup(func() {
+		_, err := db.ExecContext(ctx, `DELETE FROM users`)
+		require.NoError(t, err)
+	})
+
+	tt := []struct {
+		name     string
+		input    int32
+		expected *model.User
+		err      error
+	}{
+		{
+			name:     "OK",
+			input: 1,
+			expected: &model.User{Id: 1, NickName: "Richard Cheese"},
+		},
+		{
+			name: "NOT FOUND",
+			input: 999,
+			err:  repository.ErrNotFound,
+		},
+	}
+
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			user, err := r.GetUserByID(context.Background(), tc.input)
+			assert.Equal(t, user, tc.expected)
+			assert.Equal(t, err, tc.err)
+		})
+
+	}
+
 }
