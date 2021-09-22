@@ -9,7 +9,7 @@ import (
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
-//go:generate mockgen -destination=mocks/user.go -source=user.go -package=mock
+//go:generate mockgen -destination=mocks/user.go -source=user.go -package=service_mock
 
 type User interface {
 	GetById(ctx context.Context, id int32) (*model.User, error)
