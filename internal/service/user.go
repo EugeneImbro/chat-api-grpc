@@ -9,12 +9,26 @@ import (
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
-type UserService struct {
-	repo repository.User
+//go:generate mockgen -destination=mocks/user.go -source=user.go -package=mock
+
+type User interface {
+	GetById(ctx context.Context, id int32) (*model.User, error)
+	GetByNickName(ctx context.Context, nickName string) (*model.User, error)
+	List(ctx context.Context) ([]*model.User, error)
 }
 
+type UserService struct {
+	repo repository.Repository
+}
+
+func NewUserService(r repository.Repository) *UserService {
+	return &UserService{repo: r}
+}
+
+var ErrNotFound = errors.New("not found")
+
 func (u *UserService) GetById(ctx context.Context, id int32) (*model.User, error) {
-	usr, err := u.repo.GetById(ctx, id)
+	usr, err := u.repo.GetUserByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, repository.ErrNotFound) {
 			return nil, ErrNotFound
@@ -25,13 +39,9 @@ func (u *UserService) GetById(ctx context.Context, id int32) (*model.User, error
 }
 
 func (u *UserService) GetByNickName(ctx context.Context, nickName string) (*model.User, error) {
-	return u.repo.GetByNickName(ctx, nickName)
+	return u.repo.GetUserByNickName(ctx, nickName)
 }
 
 func (u *UserService) List(ctx context.Context) ([]*model.User, error) {
-	return u.repo.List(ctx)
-}
-
-func NewUserService(repos *repository.Repository) *UserService {
-	return &UserService{repo: repos.User}
+	return u.repo.UserList(ctx)
 }

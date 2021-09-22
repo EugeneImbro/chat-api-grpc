@@ -9,6 +9,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/lib/pq v1.8.0
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/viper v1.8.1
@@ -17,5 +18,6 @@ require (
 	golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/grpc v1.40.0
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0 // indirect
 	google.golang.org/protobuf v1.26.0
 )

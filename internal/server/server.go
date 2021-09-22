@@ -3,11 +3,10 @@ package server
 import (
 	"github.com/EugeneImbro/chat-backend/internal/service"
 )
-
 type Server struct {
-	services *service.Service
+	us *service.UserService
 }
 
-func NewServer(s *service.Service) *Server {
-	return &Server{services: s}
+func NewServer(s *service.UserService) *Server {
+	return &Server{us: s}
 }

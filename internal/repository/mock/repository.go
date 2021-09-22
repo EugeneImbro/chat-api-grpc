@@ -5,76 +5,77 @@
 package repo_mock
 
 import (
+	context "context"
 	reflect "reflect"
 
 	model "github.com/EugeneImbro/chat-backend/internal/model"
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockUser is a mock of User interface.
-type MockUser struct {
+// MockRepository is a mock of Repository interface.
+type MockRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockUserMockRecorder
+	recorder *MockRepositoryMockRecorder
 }
 
-// MockUserMockRecorder is the mock recorder for MockUser.
-type MockUserMockRecorder struct {
-	mock *MockUser
+// MockRepositoryMockRecorder is the mock recorder for MockRepository.
+type MockRepositoryMockRecorder struct {
+	mock *MockRepository
 }
 
-// NewMockUser creates a new mock instance.
-func NewMockUser(ctrl *gomock.Controller) *MockUser {
-	mock := &MockUser{ctrl: ctrl}
-	mock.recorder = &MockUserMockRecorder{mock}
+// NewMockRepository creates a new mock instance.
+func NewMockRepository(ctrl *gomock.Controller) *MockRepository {
+	mock := &MockRepository{ctrl: ctrl}
+	mock.recorder = &MockRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUser) EXPECT() *MockUserMockRecorder {
+func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
-// GetAll mocks base method.
-func (m *MockUser) GetAll() ([]*model.User, error) {
+// GetUserByID mocks base method.
+func (m *MockRepository) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List")
+	ret := m.ctrl.Call(m, "GetUserByID", ctx, id)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserByID indicates an expected call of GetUserByID.
+func (mr *MockRepositoryMockRecorder) GetUserByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockRepository)(nil).GetUserByID), ctx, id)
+}
+
+// GetUserByNickName mocks base method.
+func (m *MockRepository) GetUserByNickName(ctx context.Context, nickName string) (*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserByNickName", ctx, nickName)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserByNickName indicates an expected call of GetUserByNickName.
+func (mr *MockRepositoryMockRecorder) GetUserByNickName(ctx, nickName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByNickName", reflect.TypeOf((*MockRepository)(nil).GetUserByNickName), ctx, nickName)
+}
+
+// UserList mocks base method.
+func (m *MockRepository) UserList(ctx context.Context) ([]*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserList", ctx)
 	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAll indicates an expected call of GetAll.
-func (mr *MockUserMockRecorder) GetAll() *gomock.Call {
+// UserList indicates an expected call of UserList.
+func (mr *MockRepositoryMockRecorder) UserList(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockUser)(nil).GetAll))
-}
-
-// GetById mocks base method.
-func (m *MockUser) GetById(id int32) (*model.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetById", id)
-	ret0, _ := ret[0].(*model.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetById indicates an expected call of GetById.
-func (mr *MockUserMockRecorder) GetById(id interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockUser)(nil).GetById), id)
-}
-
-// GetByNickName mocks base method.
-func (m *MockUser) GetByNickName(nickName string) (*model.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByNickName", nickName)
-	ret0, _ := ret[0].(*model.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetByNickName indicates an expected call of GetByNickName.
-func (mr *MockUserMockRecorder) GetByNickName(nickName interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByNickName", reflect.TypeOf((*MockUser)(nil).GetByNickName), nickName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserList", reflect.TypeOf((*MockRepository)(nil).UserList), ctx)
 }

@@ -18,7 +18,6 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 
 	"github.com/EugeneImbro/chat-backend/internal/model"
-	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
 func TestUserRepository_GetById(t *testing.T) {
@@ -26,7 +25,7 @@ func TestUserRepository_GetById(t *testing.T) {
 	c, db, _ := createPreparedDBContainer()
 	defer c.Terminate(ctx)
 
-	r := repository.NewRepository(db)
+	r := New(db)
 
 	t.Run("OK", func(t *testing.T) {
 		rollback := "DELETE FROM users WHERE id=1"
@@ -44,7 +43,7 @@ func TestUserRepository_GetById(t *testing.T) {
 
 		expected := &model.User{Id: 1, NickName: "Richard Cheese"}
 
-		user, err := r.GetById(1)
+		user, err := r.GetUserByID(context.Background(), 1)
 		if err != nil {
 			logrus.WithError(err).Fatal("cannot get user from repository")
 		}

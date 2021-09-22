@@ -12,19 +12,18 @@ import (
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
-type UserPostgres struct {
+type pg struct {
 	db *sqlx.DB
 }
 
-func NewUserPostgres(db *sqlx.DB) *UserPostgres {
-	return &UserPostgres{db: db}
+func New(db *sqlx.DB) repository.Repository {
+	return &pg{db: db}
 }
 
-func (r *UserPostgres) GetById(ctx context.Context, id int32) (*model.User, error) {
+func (r *pg) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
 	var user model.User
-
 	if err := r.db.GetContext(ctx, &user,
-		"SELECT * FROM users WHERE id=$1",
+		"SELECT id, nickname FROM users WHERE id=$1",
 		id); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, repository.ErrNotFound
@@ -34,21 +33,21 @@ func (r *UserPostgres) GetById(ctx context.Context, id int32) (*model.User, erro
 	return &user, nil
 }
 
-func (r *UserPostgres) GetByNickName(ctx context.Context, nickName string) (*model.User, error) {
+func (r *pg) GetUserByNickName(ctx context.Context, nickName string) (*model.User, error) {
 	var user model.User
-	if err := r.db.GetContext(ctx,
+		if err := r.db.GetContext(ctx,
 		&user,
-		"SELECT * FROM users WHERE nickname=$1",
+		"SELECT id, nickname FROM users WHERE nickname=$1",
 		nickName); err != nil {
 		return nil, fmt.Errorf("failed to get user by nickname: %w", err)
 	}
 	return &user, nil
 }
 
-func (r *UserPostgres) List(ctx context.Context) ([]*model.User, error) {
+func (r *pg) UserList(ctx context.Context) ([]*model.User, error) {
 	var users []*model.User
 	if err := r.db.SelectContext(ctx, users,
-		"SELECT * FROM users",
+		"SELECT id, nickname FROM users",
 	); err != nil {
 		return nil, fmt.Errorf("failed to get user list: %w", err)
 	}
