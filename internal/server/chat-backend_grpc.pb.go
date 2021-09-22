@@ -60,16 +60,15 @@ func (c *userServiceClient) GetUsers(ctx context.Context, in *emptypb.Empty, opt
 }
 
 // UserServiceServer is the server API for UserService service.
-// All implementations must embed UnimplementedUserServiceServer
+// All implementations should embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
 	GetUserById(context.Context, *GetUserByIdRequest) (*User, error)
 	GetUserByNickName(context.Context, *GetUserByNickNameRequest) (*User, error)
 	GetUsers(context.Context, *emptypb.Empty) (*GetUsersResponse, error)
-	mustEmbedUnimplementedUserServiceServer()
 }
 
-// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedUserServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedUserServiceServer struct {
 }
 
@@ -82,7 +81,6 @@ func (UnimplementedUserServiceServer) GetUserByNickName(context.Context, *GetUse
 func (UnimplementedUserServiceServer) GetUsers(context.Context, *emptypb.Empty) (*GetUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
-func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
 // UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to UserServiceServer will
