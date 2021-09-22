@@ -39,7 +39,14 @@ func (u *UserService) GetById(ctx context.Context, id int32) (*model.User, error
 }
 
 func (u *UserService) GetByNickName(ctx context.Context, nickName string) (*model.User, error) {
-	return u.repo.GetUserByNickName(ctx, nickName)
+	usr, err := u.repo.GetUserByNickName(ctx, nickName)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			return nil, ErrNotFound
+		}
+		return nil, fmt.Errorf("cannot get user from repository: %w", err)
+	}
+	return usr, err
 }
 
 func (u *UserService) List(ctx context.Context) ([]*model.User, error) {

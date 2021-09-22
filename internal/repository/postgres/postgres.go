@@ -35,10 +35,13 @@ func (r pg) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
 
 func (r pg) GetUserByNickName(ctx context.Context, nickName string) (*model.User, error) {
 	var user model.User
-		if err := r.db.GetContext(ctx,
+	if err := r.db.GetContext(ctx,
 		&user,
 		"SELECT id, nickname FROM users WHERE nickname=$1",
 		nickName); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, repository.ErrNotFound
+		}
 		return nil, fmt.Errorf("failed to get user by nickname: %w", err)
 	}
 	return &user, nil
