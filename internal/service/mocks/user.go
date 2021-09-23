@@ -12,31 +12,31 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockUser is a mock of User interface.
-type MockUser struct {
+// MockUserService is a mock of UserService interface.
+type MockUserService struct {
 	ctrl     *gomock.Controller
-	recorder *MockUserMockRecorder
+	recorder *MockUserServiceMockRecorder
 }
 
-// MockUserMockRecorder is the mock recorder for MockUser.
-type MockUserMockRecorder struct {
-	mock *MockUser
+// MockUserServiceMockRecorder is the mock recorder for MockUserService.
+type MockUserServiceMockRecorder struct {
+	mock *MockUserService
 }
 
-// NewMockUser creates a new mock instance.
-func NewMockUser(ctrl *gomock.Controller) *MockUser {
-	mock := &MockUser{ctrl: ctrl}
-	mock.recorder = &MockUserMockRecorder{mock}
+// NewMockUserService creates a new mock instance.
+func NewMockUserService(ctrl *gomock.Controller) *MockUserService {
+	mock := &MockUserService{ctrl: ctrl}
+	mock.recorder = &MockUserServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUser) EXPECT() *MockUserMockRecorder {
+func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 	return m.recorder
 }
 
 // GetById mocks base method.
-func (m *MockUser) GetById(ctx context.Context, id int32) (*model.User, error) {
+func (m *MockUserService) GetById(ctx context.Context, id int32) (*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetById", ctx, id)
 	ret0, _ := ret[0].(*model.User)
@@ -45,13 +45,13 @@ func (m *MockUser) GetById(ctx context.Context, id int32) (*model.User, error) {
 }
 
 // GetById indicates an expected call of GetById.
-func (mr *MockUserMockRecorder) GetById(ctx, id interface{}) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) GetById(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockUser)(nil).GetById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockUserService)(nil).GetById), ctx, id)
 }
 
 // GetByNickName mocks base method.
-func (m *MockUser) GetByNickName(ctx context.Context, nickName string) (*model.User, error) {
+func (m *MockUserService) GetByNickName(ctx context.Context, nickName string) (*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetByNickName", ctx, nickName)
 	ret0, _ := ret[0].(*model.User)
@@ -60,13 +60,13 @@ func (m *MockUser) GetByNickName(ctx context.Context, nickName string) (*model.U
 }
 
 // GetByNickName indicates an expected call of GetByNickName.
-func (mr *MockUserMockRecorder) GetByNickName(ctx, nickName interface{}) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) GetByNickName(ctx, nickName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByNickName", reflect.TypeOf((*MockUser)(nil).GetByNickName), ctx, nickName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByNickName", reflect.TypeOf((*MockUserService)(nil).GetByNickName), ctx, nickName)
 }
 
 // List mocks base method.
-func (m *MockUser) List(ctx context.Context) ([]*model.User, error) {
+func (m *MockUserService) List(ctx context.Context) ([]*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx)
 	ret0, _ := ret[0].([]*model.User)
@@ -75,7 +75,7 @@ func (m *MockUser) List(ctx context.Context) ([]*model.User, error) {
 }
 
 // List indicates an expected call of List.
-func (mr *MockUserMockRecorder) List(ctx interface{}) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) List(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockUser)(nil).List), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockUserService)(nil).List), ctx)
 }

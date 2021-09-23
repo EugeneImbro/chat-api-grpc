@@ -8,7 +8,6 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
@@ -20,8 +19,8 @@ func New(db *sqlx.DB) repository.Repository {
 	return &pg{db: db}
 }
 
-func (r pg) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
-	var user model.User
+func (r pg) GetUserByID(ctx context.Context, id int32) (*repository.User, error) {
+	var user repository.User
 	if err := r.db.GetContext(ctx, &user,
 		"SELECT id, nickname FROM users WHERE id=$1",
 		id); err != nil {
@@ -33,8 +32,8 @@ func (r pg) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
 	return &user, nil
 }
 
-func (r pg) GetUserByNickName(ctx context.Context, nickName string) (*model.User, error) {
-	var user model.User
+func (r pg) GetUserByNickName(ctx context.Context, nickName string) (*repository.User, error) {
+	var user repository.User
 	if err := r.db.GetContext(ctx,
 		&user,
 		"SELECT id, nickname FROM users WHERE nickname=$1",
@@ -47,8 +46,8 @@ func (r pg) GetUserByNickName(ctx context.Context, nickName string) (*model.User
 	return &user, nil
 }
 
-func (r pg) UserList(ctx context.Context) ([]*model.User, error) {
-	var users []*model.User
+func (r pg) UserList(ctx context.Context) ([]*repository.User, error) {
+	var users []*repository.User
 	if err := r.db.SelectContext(ctx, users,
 		"SELECT id, nickname FROM users",
 	); err != nil {

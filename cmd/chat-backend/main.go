@@ -8,19 +8,14 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 
 	"github.com/EugeneImbro/chat-backend/internal/repository/postgres"
 	"github.com/EugeneImbro/chat-backend/internal/server"
-	"github.com/EugeneImbro/chat-backend/internal/service"
+	service "github.com/EugeneImbro/chat-backend/internal/service/impl"
 )
 
 func main() {
-	if err := initConfig(); err != nil {
-		logrus.WithError(err).Fatal("config initialization error")
-	}
-
 	db, err := sqlx.Open("postgres", os.Getenv("DB_DSN"))
 	if err != nil {
 		logrus.WithError(err).Fatal("database initialization error")
@@ -33,7 +28,7 @@ func main() {
 	repo := postgres.New(db)
 	us := service.NewUserService(repo)
 
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", viper.GetString("port")))
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", os.Getenv("PORT")))
 	if err != nil {
 		logrus.WithError(err).Fatal("listener initialization error")
 	}
@@ -44,10 +39,4 @@ func main() {
 	if err := s.Serve(listener); err != nil {
 		logrus.WithError(err).Fatal("failed to serve")
 	}
-}
-
-func initConfig() error {
-	viper.AddConfigPath("configs")
-	viper.SetConfigName("chat-backend")
-	return viper.ReadInConfig()
 }

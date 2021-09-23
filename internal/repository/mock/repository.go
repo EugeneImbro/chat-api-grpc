@@ -8,7 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	model "github.com/EugeneImbro/chat-backend/internal/model"
+	repository "github.com/EugeneImbro/chat-backend/internal/repository"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -36,10 +36,10 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // GetUserByID mocks base method.
-func (m *MockRepository) GetUserByID(ctx context.Context, id int32) (*model.User, error) {
+func (m *MockRepository) GetUserByID(ctx context.Context, id int32) (*repository.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserByID", ctx, id)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*repository.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,10 +51,10 @@ func (mr *MockRepositoryMockRecorder) GetUserByID(ctx, id interface{}) *gomock.C
 }
 
 // GetUserByNickName mocks base method.
-func (m *MockRepository) GetUserByNickName(ctx context.Context, nickName string) (*model.User, error) {
+func (m *MockRepository) GetUserByNickName(ctx context.Context, nickName string) (*repository.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserByNickName", ctx, nickName)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*repository.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -66,10 +66,10 @@ func (mr *MockRepositoryMockRecorder) GetUserByNickName(ctx, nickName interface{
 }
 
 // UserList mocks base method.
-func (m *MockRepository) UserList(ctx context.Context) ([]*model.User, error) {
+func (m *MockRepository) UserList(ctx context.Context) ([]*repository.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserList", ctx)
-	ret0, _ := ret[0].([]*model.User)
+	ret0, _ := ret[0].([]*repository.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

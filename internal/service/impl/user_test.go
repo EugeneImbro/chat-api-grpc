@@ -1,4 +1,4 @@
-package service
+package impl
 
 import (
 	"context"
@@ -7,9 +7,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 	"github.com/EugeneImbro/chat-backend/internal/repository/mock"
+	"github.com/EugeneImbro/chat-backend/internal/service"
 )
 
 func TestUserService_GetById(t *testing.T) {
@@ -19,24 +19,24 @@ func TestUserService_GetById(t *testing.T) {
 		name     string
 		mock     mockBehavior
 		input    int32
-		expected *model.User
+		expected *service.User
 		err error
 	}{
 		{
 			name: "OK",
 			mock: func(r *repo_mock.MockRepository, id int32) {
-				r.EXPECT().GetUserByID(context.Background(), int32(1)).Return(&model.User{Id: 1, NickName: "Richard Cheese"}, nil)
+				r.EXPECT().GetUserByID(context.Background(), int32(1)).Return(&repository.User{Id: 1, NickName: "Richard Cheese"}, nil)
 			},
 			input:    1,
-			expected: &model.User{Id: 1, NickName: "Richard Cheese"},
+			expected: &service.User{Id: 1, NickName: "Richard Cheese"},
 		},
 		{
 			name: "NOT FOUND",
 			mock: func(r *repo_mock.MockRepository, id int32) {
 				r.EXPECT().GetUserByID(context.Background(), int32(1)).Return(nil, repository.ErrNotFound)
 			},
-			input:    1,
-			err: ErrNotFound,
+			input: 1,
+			err:   service.ErrNotFound,
 		},
 	}
 
@@ -46,7 +46,7 @@ func TestUserService_GetById(t *testing.T) {
 			defer c.Finish()
 			r := repo_mock.NewMockRepository(c)
 			tc.mock(r, tc.input)
-			s := &UserService{repo: r}
+			s := &us{repo: r}
 
 			result, err := s.GetById(context.Background(), int32(1))
 

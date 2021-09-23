@@ -19,7 +19,6 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 
-	"github.com/EugeneImbro/chat-backend/internal/model"
 	"github.com/EugeneImbro/chat-backend/internal/repository"
 )
 
@@ -113,13 +112,13 @@ func TestUserRepository_GetById(t *testing.T) {
 	tt := []struct {
 		name     string
 		input    int32
-		expected *model.User
+		expected *repository.User
 		err      error
 	}{
 		{
 			name:     "OK",
 			input: 1,
-			expected: &model.User{Id: 1, NickName: "Richard Cheese"},
+			expected: &repository.User{Id: 1, NickName: "Richard Cheese"},
 		},
 		{
 			name: "NOT FOUND",
