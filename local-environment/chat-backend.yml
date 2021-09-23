@@ -6,6 +6,9 @@ services:
     container_name: chat-backend
     ports:
       - "8080:8080"
+    environment:
+      DB_DSN: postgresql://postgres:Pass@word@postgresql:5432/postgres?sslmode=disable
+      PORT: 8080
 
 networks:
   default:
