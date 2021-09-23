@@ -4,6 +4,9 @@
 *.ipr
 *.iws
 
+# Local environment
+.env
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

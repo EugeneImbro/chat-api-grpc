@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: Pass@word
+
+networks:
+  default:
+    name: chat-backend-network

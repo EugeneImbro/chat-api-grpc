@@ -1,24 +1,14 @@
-# chat-backend
+# Chat Backend
+API (GRPC) for simple chat application. Users, Channels, Messages
 
-пилим бекенд для тупого чатика:
-1) есть юзер (id, nickname)
-2) есть room (id, name, users)
-3) есть сообщение(id, from, room_id, text, created_at)
+#### Database migrations
 
-будем итеративно прогать все, поэтому я ожидаю от тебя:
-1) grpc сервер с методом GetUsers
-2) postgres база (только с юзерами)
-3) докерфайл
-4) миграция в базу (только с юзерами)
+```
+migrate -path ./migrations -database postgresql://postgres:Pass@word@localhost:5432/postgres?sslmode=disable up
+```
 
-не важно, могу предложить в целом самый популярный https://github.com/golang-migrate/migrate
+#### Run local environment
 
-для работы с базой sqlx
-
-работа с юзерами пока только ридонли
-
-типа GetUsers метод
-
-драйвер для postgres можешь брать любой libpq или pgx
-
-для тестирования https://github.com/stretchr/testify(testify/require и testify/assert), для тестов базы + https://github.com/testcontainers/testcontainers-go
+```
+docker-compose -f local-environment/postgresql.yml up -d
+```
